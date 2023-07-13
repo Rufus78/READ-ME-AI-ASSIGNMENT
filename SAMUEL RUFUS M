@@ -1,0 +1,43 @@
+import langchain
+
+class Agent:
+    def __init__(self):
+        self.langchain_model = langchain.load_model()
+        self.files = []
+
+    def add_file(self, file_path):
+        with open(file_path, 'r') as file:
+            content = file.read()
+            self.files.append(content)
+
+    def ask_question(self, question):
+        input_text = ' '.join(self.files) + ' ' + question
+        response = self.langchain_model.generate_text(input_text)
+        return response
+
+def create_agent():
+    agent = Agent()
+    return agent
+
+def add_files(agent, file_paths):
+    for file_path in file_paths:
+        agent.add_file(file_path)
+
+def ask_question(agent, question):
+    answer = agent.ask_question(question)
+    return answer
+
+def run_agent():
+    agent = create_agent()
+
+    # Add files for the agent to understand
+    file_paths = ['file1.txt', 'file2.txt']
+    add_files(agent, file_paths)
+
+    # Ask questions to the agent
+    question = input('Ask a question: ')
+    answer = ask_question(agent, question)
+    print('Agent\'s answer:', answer)
+
+if __name__ == '__main__':
+    run_agent()
